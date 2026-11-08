@@ -19,8 +19,10 @@ The project starts from a Book One reference implementation and then advances th
 Install dependencies:
 
 ```bash
-pip install colorama
+pip install colorama pygame
 ```
+
+`pygame` is required for the later graphical chapter, especially `chapter12.py`.
 
 ## Running the game
 
