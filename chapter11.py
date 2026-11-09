@@ -896,7 +896,11 @@ ITEM_TYPES = [
 def generate_rooms(game_map, max_rooms, room_min_size, room_max_size, map_width, map_height):
     rooms = []
 
-    for _ in range(max_rooms):
+    # max_rooms is the target, not the number of placement attempts.
+    # A collision should reject one candidate, not consume a room slot.
+    for _ in range(max_rooms * 50):
+        if len(rooms) >= max_rooms:
+            break
         width = random.randint(room_min_size, room_max_size)
         height = random.randint(room_min_size, room_max_size)
         x = random.randint(1, map_width - width - 1)

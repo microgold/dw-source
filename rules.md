@@ -203,3 +203,8 @@ Quit with `q` or close the graphical window to retain the most recent completed-
 On startup, `c` continues a valid save; `n`, then `y`, requests replacement, which occurs after a new character is confirmed and reaches its first checkpoint. Canceling leaves the previous file unchanged. Invalid or incompatible saves are reported and left untouched. Reconstruct known item templates and preserve equipment identity using inventory indexes. Never load executable saved code.
 
 Death deletes the resumable save before the usual death message and score handling, including fatal Teleport. Dead players cannot be saved. High scores remain separate. This supports normal permadeath but does not prevent manual file editing or copying.
+
+
+### Room-generation retry budget
+
+From Chapter 11 onward, `generate_rooms` treats `max_rooms` as a target number of accepted rooms. It permits up to `max_rooms * 50` placement attempts and stops when the target is reached. Overlapping candidates are rejected without reducing the target. The normal target remains ten rooms; crowded layouts may contain fewer. This changes newly generated floors, not saved or cached layouts. Per-room monster and item spawn chances remain unchanged.
