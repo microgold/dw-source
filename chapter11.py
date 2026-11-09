@@ -1048,8 +1048,24 @@ class Floor:
         x, y = self.downstairs
         self.game_map[y][x] = STAIRS_DOWN
         reserved = {self.entrance, self.downstairs}
-        self.monsters[:] = [m for m in self.monsters if (m.x, m.y) not in reserved]
-        self.items[:] = [item for item in self.items if (item.x, item.y) not in reserved]
+        occupied = reserved | {(m.x, m.y) for m in self.monsters}
+        occupied.update((item.x, item.y) for item in self.items)
+        if self.store is not None:
+            occupied.add((self.store.x, self.store.y))
+        for entity in self.monsters + self.items:
+            if (entity.x, entity.y) not in reserved:
+                continue
+            candidates = [(x, y) for y, row in enumerate(self.game_map)
+                          for x, tile in enumerate(row)
+                          if tile.monster_walkable and (x, y) not in occupied]
+            if not candidates:
+                raise ValueError("A floor needs space beside its stair landings.")
+            # Keep the object and its rolled stats, preferably in the same room.
+            point = min(candidates, key=lambda point:
+                        (abs(point[0] - entity.x) + abs(point[1] - entity.y),
+                         point[1], point[0]))
+            entity.x, entity.y = point
+            occupied.add(point)
 
 
 class Dungeon:
